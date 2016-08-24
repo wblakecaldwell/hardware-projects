@@ -48,7 +48,7 @@ func (ds *DoorServer) UpdateDoorStatus(status string) error {
 	}
 	defer resp.Body.Close()
 
-	// TODO:
+	// read the response
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return fmt.Errorf("Error reading the response body: %s\n", err)
