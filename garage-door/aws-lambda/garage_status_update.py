@@ -9,7 +9,7 @@ def lambda_handler(event, context):
         return 'bad request'
 
     # validate status
-    if event['status'] != 'open' and event['status'] != 'closed':
+    if event['status'] not in ['open', 'closed']:
         return 'bad request'
 
     # store the object
