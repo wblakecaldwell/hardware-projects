@@ -1,27 +1,34 @@
 import boto3
+import traceback
+import sys
 
 bucket = 'blakecaldwell.garage'
 bucket_key = 'status'
 
 def lambda_handler(event, context):
-    if 'request' not in event or 'type' not in event['request']:
-        return 'Invalid request'
+    try:
+        if 'request' not in event or 'type' not in event['request']:
+            return 'Invalid request'
 
-    if event['request']['type'] not in ['LaunchRequest', 'IntentRequest']:
-        return 'Invalid request'
+        if event['request']['type'] not in ['LaunchRequest', 'IntentRequest']:
+            return 'Invalid request'
 
-    # Not using sessions for now
-    sessionAttributes = {}
+        # Not using sessions for now
+        sessionAttributes = {}
 
-    if event['request']['type'] == "LaunchRequest":
-        speechlet = onLaunch(event['request'])
-        response = buildResponse(sessionAttributes, speechlet)
-    elif event['request']['type'] == "IntentRequest":
-        speechlet = onIntent(event['request'])
-        response = buildResponse(sessionAttributes, speechlet)
-    
-    # Return a response for speech output
-    return response
+        if event['request']['type'] == "LaunchRequest":
+            speechlet = onLaunch(event['request'])
+            response = buildResponse(sessionAttributes, speechlet)
+        elif event['request']['type'] == "IntentRequest":
+            speechlet = onIntent(event['request'])
+            response = buildResponse(sessionAttributes, speechlet)
+
+        # Return a response for speech output
+        return response
+
+    except Exception, err:
+        traceback.print_exc(file=sys.stdout)
+        return 'an error occurred'
 
 def status():
     s3 = boto3.client('s3')
