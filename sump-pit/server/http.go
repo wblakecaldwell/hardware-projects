@@ -78,8 +78,10 @@ func buildSumpRegisterLevelsHandler(db Database, panicWaterLevel float64, emaile
 		}
 
 		if emailer != nil && panicWaterLevel > 0.0 && data.Level > panicWaterLevel {
-			emailer.SendEmail("*** SUMP PIT PANIC ***",
-				fmt.Sprintf("The sump pit water is now at %f inches!", data.Level))
+			err := emailer.SendEmail("*** SUMP PIT PANIC ***", fmt.Sprintf("The sump pit water is now at %f inches!", data.Level))
+			if err != nil {
+				log.Printf("Error sending email: %s\n", err)
+			}
 		}
 
 		waterLevel := WaterLevel{
